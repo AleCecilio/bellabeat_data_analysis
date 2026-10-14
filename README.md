@@ -18,6 +18,7 @@ Link do banco de dados: https://www.kaggle.com/datasets/arashnic/fitbit
 
 ## Arquitetura Inicial do Projeto
 
+```text
 bellabeat_data_analysis/
 │
 ├── .venv/
@@ -40,3 +41,4 @@ bellabeat_data_analysis/
 │
 ├── dashboards/
 └── src/
+```
