@@ -1,0 +1,8 @@
+# Ambiente Virtual
+.venv/ 
+
+# Dados Originais (Podem ser encontrados no link do README)
+data/raw/
+
+# Prodegendo dados sensiveis do Banco de Dados
+.env
