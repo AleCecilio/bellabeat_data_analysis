@@ -16,7 +16,17 @@ Para responder a estas perguntas, é utilizado o conjunto de dados FitBit Fitnes
 
 Link do banco de dados: https://www.kaggle.com/datasets/arashnic/fitbit
 
-## Arquitetura Inicial do Projeto
+## Status Atual do Projeto
+**Fase Atual:** Preparação e Limpeza de Dados (Camada Silver).
+- [x] Configuração do ambiente isolado e estrutura profissional de diretórios.
+- [x] Criação do módulo `data_loader` para automação de leitura e varredura de arquivos.
+- [x] Inventário, amostragem e seleção de tabelas analíticas (`dailyActivity`, `sleepDay`, `hourlySteps`, `weightLogInfo`).
+- [x] Ingestão e concatenação de dados brutos (Pipeline da Camada Bronze concluída).
+- [ ] Limpeza, tratamento de tipos de dados (datas) e deduplicação (Notebook 02).
+- [ ] Carga no Banco de Dados e Exploração via SQL.
+- [ ] Desenvolvimento de Dashboards/Visualizações.
+
+## Arquitetura do Projeto
 
 ```text
 bellabeat_data_analysis/
@@ -28,17 +38,17 @@ bellabeat_data_analysis/
 ├── requirements.txt
 │
 ├── data/
-│   ├── raw/
-│   └── processed/
+│   ├── raw/                # Arquivos CSV originais divididos por mês
+│   └── processed/          # Arquivos concatenados e limpos (ex: *_concat.csv)
 │
 ├── notebooks/
-│   ├── 01_concatenacao_e_profiling.ipynb
-│   └── 02_data_cleaning.ipynb
+│   ├── 01_concatenation_and_profiling.ipynb   # Inventário exploratório e pipeline de ingestão
+│   └── 02_data_cleaning.ipynb                 # Limpeza de dados
 │
 ├── sql/
-│   ├── 01_cria_tabelas.sql
-│   └── 02_consultas_analise.sql
-│
+│   
 ├── dashboards/
+│
 └── src/
-```
+    ├── __init__.py
+    └── data_loader.py      # Módulos Python com funções reutilizáveis de ETL
