@@ -14,6 +14,7 @@ charset-normalizer==3.5.1
 colorama==0.4.6
 comm==0.2.3
 contourpy==1.4.0
+cryptography==50.0.2
 cycler==0.12.1
 debugpy==1.8.22
 defusedxml==0.7.1
@@ -64,6 +65,7 @@ nest-asyncio2==1.7.3
 notebook==7.6.3
 notebook_shim==0.2.4
 numpy==2.5.3
+oracledb==26.0.1
 packaging==26.3
 pandas==3.0.6
 pandocfilters==1.5.1
