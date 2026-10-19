@@ -1,6 +1,9 @@
 # Ambiente Virtual
 .venv/ 
 
+# Arquivos de Cache do Python
+__pycache__
+
 # Dados Originais (Podem ser encontrados no link do README)
 data/raw/
 
