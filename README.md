@@ -36,26 +36,31 @@ Link do banco de dados: <https://www.kaggle.com/datasets/arashnic/fitbit>
 
 ```text
 bellabeat_data_analysis/
-│
-├── .venv/
-├── .env
-├── .gitignore
-├── README.md
-├── requirements.txt
-│
 ├── data/
 │   ├── raw/                # Arquivos CSV originais divididos por mês
-│   └── processed/          # Arquivos concatenados e limpos (ex: *_concat.csv)
+│   └── processed/          # Arquivos concatenados e limpos
 │
 ├── notebooks/
-│   ├── 01_concatenation_and_profiling.ipynb   # Inventário exploratório e pipeline de ingestão
-│   └── 02_data_cleaning.ipynb                 # Limpeza de dados
+│   ├── 01_concatenation_and_profiling.ipynb  # Inventário exploratório e ingestão
+│   └── 02_data_cleaning.ipynb                # Limpeza de dados
 │
-├── sql/
-│   
-├── dashboards/
+├── sql/                    # Consultas SQL para análise de dados
 │
-└── src/
-    ├── __init__.py
-    └── data_loader.py      # Módulos Python com funções reutilizáveis de ETL
+├── dashboards/             # Dashboards e arquivos relacionados
+│
+├── src/                    # Módulos Python com funções reutilizáveis
+│   ├── __init__.py
+│   ├── io/
+│   │   ├── __init__.py
+│   │   └── data_loader.py
+│   ├── utils/
+│   │   ├── __init__.py
+│   │   └── data_quality.py
+│   └── plots/
+│       ├── __init__.py
+│       └── graph_data_quality.py
+│
+├── .gitignore
+├── README.md
+└── requirements.txt
 ```
