@@ -1,26 +1,23 @@
-import numpy as np
 import pandas as pd
-from scipy import stats
 
 # =====================================================================
 # FUNÇÕES AUXILIARES — cada uma retorna uma Série com sufixo no índice
 # =====================================================================
 
 def _data_missing_nan(df):
-    cols_para_checar = [c for c in df.columns if c not in df.columns]
-    if not cols_para_checar:
-        return pd.Series(dtype='int64')
-    n = df[cols_para_checar].isnull().sum()
-    n.index = n.index + ' (Valores NaN)'
+    # Identifica nulos reais (NaN / None) em todas as colunas
+    n = df.isna().sum()
+    n.index = n.index + ' (Valores NaN / Nulos)'
     return n
 
 def _data_missing_numeric(df):
+    # Nota: Atenção com colunas onde 0 é um valor válido (ex: minutos de exercício)
     n = (df.select_dtypes(include='number') == 0).sum()
     n.index = n.index + ' (Zeros - Numérico)'
     return n
 
 def _data_missing_numeric_obj(df):
-    n = (df == '0').sum()
+    n = (df.select_dtypes(include='object') == '0').sum()
     n.index = n.index + ' (Zeros - Texto)'
     return n
 
@@ -30,19 +27,12 @@ def _data_missing_list(df):
     return n
 
 def _data_missing_datetime(df):
-    series = []
-    for col in df.select_dtypes(include='datetime').columns:
-        converted = pd.to_datetime(df[col], errors='coerce')
-        total_nat = converted.isna().sum()
-        series.append(
-            pd.Series(
-                total_nat,
-                index=[f'{col} (Valores NaT)']
-            )
-        )
-    if series:
-        return pd.concat(series)
-    return pd.Series(dtype='int64')
+    dt_cols = df.select_dtypes(include=['datetime', 'datetime64']).columns
+    if len(dt_cols) == 0:
+        return pd.Series(dtype='int64')
+    n = df[dt_cols].isna().sum()
+    n.index = n.index + ' (Valores NaT)'
+    return n
 
 # =====================================================================
 # MAPA: tipo (string) → função correspondente
@@ -65,7 +55,7 @@ _TIPOS_DEFAULT = ['nan', 'numeric', 'numeric_obj', 'list', 'datetime']
 def resumo_qualidade(df, tipos=None):
     """
     Gera um DataFrame de diagnóstico de qualidade com contagem e percentual
-    de dados faltantes, por tipo de "buraco".
+    de dados faltantes ou anômalos.
     """
     if tipos is None:
         tipos = _TIPOS_DEFAULT
@@ -76,8 +66,16 @@ def resumo_qualidade(df, tipos=None):
 
     series_list = [_TIPOS_MISSING[t](df) for t in tipos]
     series_list = [s for s in series_list if not s.empty]
+
+    # Retorna DataFrame vazio se não houver nenhuma anomalia encontrada
+    if not series_list:
+        return pd.DataFrame(columns=['Quantidade', 'Perda de Dados (%)'])
+
     resumo_bruto = pd.concat(series_list)
     resumo_filtrado = resumo_bruto[resumo_bruto > 0]
+
+    if resumo_filtrado.empty:
+        return pd.DataFrame(columns=['Quantidade', 'Perda de Dados (%)'])
 
     return (
         pd.DataFrame({
