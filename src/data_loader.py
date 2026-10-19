@@ -2,76 +2,83 @@ import os
 from pathlib import Path
 import pandas as pd
 
-# Funções auxiliares para carregamento e inspeção de dados
+# =====================================================================
+# FUNÇÕES PARA CARREGAMENTO E INSPEÇÃO DE DADOS
+# =====================================================================
 
-def _list_available_tables(raw_data_path: str) -> list:
-    """Varre a pasta de dados brutos (raw) e retorna uma lista ordenada com
-
+def _list_available_tables(caminho_dados_brutos: str) -> list:
+    """
+    Varre a pasta de dados brutos (raw) e retorna uma lista ordenada com
     os nomes únicos de todas as tabelas CSV disponíveis.
     """
-    raw_path = Path(raw_data_path)
-    files = list(raw_path.rglob("*.csv"))
-    table_names = {file.stem for file in files}
-    return sorted(list(table_names))
+
+    caminho_bruto = Path(caminho_dados_brutos)
+    arquivos = list(caminho_bruto.rglob("*.csv"))
+    nomes_tabelas = {arquivo.stem for arquivo in arquivos}
+    return sorted(list(nomes_tabelas))
 
 
-# Funções públicas
+# =====================================================================
+#   FUNÇÕES PÚBLICAS DE CARREGAMENTO DE DADOS
+# =====================================================================
 
-def load_table(raw_data_path: str, table_name: str) -> pd.DataFrame:
-    """Carrega uma tabela específica a partir da pasta de dados brutos (raw).
-
+def load_table(caminho_dados: str, nome_tabela: str) -> pd.DataFrame:
+    """
+    Carrega uma tabela específica a partir da pasta de dados brutos (raw).
     Retorna um DataFrame contendo os dados da tabela.
     """
-    raw_path = Path(raw_data_path)
-    table_file = list(raw_path.rglob(f"{table_name}.csv"))
+    caminho_bruto = Path(caminho_dados)
+    arquivo_tabela = list(caminho_bruto.rglob(f"{nome_tabela}.csv"))
 
-    if not table_file:
+    if not arquivo_tabela:
         raise FileNotFoundError(
-            f"Nenhum arquivo encontrado para: {table_name}.csv em {raw_data_path}"
+            f"Nenhum arquivo encontrado para: {nome_tabela}.csv em {caminho_dados}"
         )
 
-    df = pd.read_csv(table_file[0])
-    return df
+    df_tabela = pd.read_csv(arquivo_tabela[0])
+    return df_tabela
 
-def inspect_samples(raw_data_path: str, n_rows: int = 3) -> dict:
-    """Carrega uma pequena amostra (n_rows) de cada tabela encontrada na pasta de
-
+def inspect_samples(caminho_dados_brutos: str, qtd_linhas: int = 3) -> dict:
+    """
+    Carrega uma pequena amostra (qtd_linhas) de cada tabela encontrada na pasta de
     dados brutos. Retorna um dicionário com o nome da tabela como chave e o
     DataFrame de amostra como valor.
     """
-    raw_path = Path(raw_data_path)
-    tables = _list_available_tables(raw_data_path)
+    caminho_bruto = Path(caminho_dados_brutos)
+    tabelas = _list_available_tables(caminho_dados_brutos)
 
-    samples = {}
-    for table in tables:
+    amostras = {}
+    for tabela in tabelas:
         # Pega a primeira ocorrência do arquivo para servir de modelo
-        sample_file = list(raw_path.rglob(f"{table}.csv"))[0]
-        samples[table] = pd.read_csv(sample_file, nrows=n_rows)
+        arquivo_amostra = list(caminho_bruto.rglob(f"{tabela}.csv"))[0]
+        amostras[tabela] = pd.read_csv(arquivo_amostra, nrows=qtd_linhas)
 
-    return samples
+    return amostras
 
 
 def load_and_concatenate_csvs(
-    raw_data_path: str, table_name: str
+    caminho_dados_brutos: str, nome_tabela: str
 ) -> pd.DataFrame:
-    """Localiza e concatena os arquivos CSV correspondentes ao longo das subpastas
-
+    """
+    Localiza e concatena os arquivos CSV correspondentes ao longo das subpastas
     de cada mês.
     """
-    raw_path = Path(raw_data_path)
-    found_files = list(raw_path.rglob(f"{table_name}.csv"))
+    caminho_bruto = Path(caminho_dados_brutos)
+    arquivos_encontrados = list(caminho_bruto.rglob(f"{nome_tabela}.csv"))
 
-    if not found_files:
+    if not arquivos_encontrados:
         raise FileNotFoundError(
-            f"Nenhum arquivo encontrado para: {table_name}.csv em {raw_data_path}"
+            f"Nenhum arquivo encontrado para: {nome_tabela}.csv em {caminho_dados_brutos}"
         )
 
-    dfs = []
-    for file in found_files:
-        df = pd.read_csv(file)
-        # Registra qual subpasta originou os registros para rastreabilidade
-        df['source_folder'] = file.parent.name
-        dfs.append(df)
+    lista_dfs = []
+    for arquivo in arquivos_encontrados:
+        df_item = pd.read_csv(arquivo)
 
-    df_concatenated = pd.concat(dfs, ignore_index=True)
-    return df_concatenated
+        # Registra qual subpasta originou os registros para rastreabilidade
+        df_item['source_folder'] = arquivo.parent.name
+
+        lista_dfs.append(df_item)
+
+    df_concatenado = pd.concat(lista_dfs, ignore_index=True)
+    return df_concatenado
