@@ -8,17 +8,18 @@ import seaborn as sns
 
 
 # ==============================================================================
-#   Gráfico: Radar de Impacto de Outliers (Resumo em Lote)
+#   Gráfico: Radar de Impacto de Outliers (Resumo em Lote - Adaptativo)
 # ==============================================================================
 def radar_chart_outliers(
     df_diagnostico,
     cor_tema='#4A4E69',
     titulo="Impacto de Outliers por Métrica",
-    tamanho_figura=(10, 5),
-    polegadas=120
+    tamanho_figura=None,  # Alterado para None para ativar o ajuste automático
+    polegadas=150
 ):
     """
     Gera um gráfico de barras horizontais ranqueando a incidência de outliers por coluna.
+    O tamanho vertical ajusta-se automaticamente à quantidade de variáveis analisadas.
     """
     if df_diagnostico.empty or 'Coluna' not in df_diagnostico.columns:
         print("Nenhum outlier encontrado para exibir no gráfico.")
@@ -36,6 +37,21 @@ def radar_chart_outliers(
 
     # Ordena em ordem crescente para que a barra mais longa fique no topo no gráfico horizontal
     df_plot = df_plot.sort_values(by='Impacto_Num', ascending=True)
+
+    # --- OTIMIZAÇÃO AUTOMÁTICA DE TAMANHO ---
+    qtd_barras = len(df_plot)
+    
+    if tamanho_figura is None:
+        if qtd_barras == 1:
+            altura_dinamica = 1.5  # Altura compacta para barra única
+        elif qtd_barras <= 3:
+            altura_dinamica = 2.8  # Altura balanceada para 2-3 barras
+        else:
+            # Calcula a altura baseada na quantidade de barras (acompanha o height=0.6 da barra)
+            altura_dinamica = (qtd_barras * 0.6) + 2.0
+            
+        tamanho_figura = (10, altura_dinamica)
+    # ----------------------------------------
 
     fig, ax = plt.subplots(figsize=tamanho_figura, dpi=polegadas)
 
@@ -69,7 +85,7 @@ def radar_chart_outliers(
 
     # Expande o limite X para garantir espaço aos rótulos de texto
     max_val = df_plot['Impacto_Num'].max()
-    ax.set_xlim(0, max_val * 1.2 if max_val > 0 else 10)
+    ax.set_xlim(0, max_val * 1.15 if max_val > 0 else 10)
 
     # Grelha vertical sutil
     ax.set_axisbelow(True)
@@ -182,5 +198,63 @@ def outlier_plot(
     sns.despine(left=True)
     ax.yaxis.set_visible(False)
     
+    plt.tight_layout()
+    plt.show()
+
+# ==============================================================================
+#   Gráfico: Dispersão (Scatter Plot) para Validação Cruzada de Outliers
+# ==============================================================================
+def validation_scatter_plot(
+    df,
+    coluna_x,
+    coluna_y,
+    cor_tema='#4A4E69',
+    titulo=None,
+    tamanho_figura=(10, 6),
+    polegadas=120,
+    destacar_outliers=None
+):
+    """
+    Gera um gráfico de dispersão (Scatter Plot) para analisar a relação 
+    entre duas variáveis e validar o comportamento dos dados.
+    """
+    if df.empty or coluna_x not in df.columns or coluna_y not in df.columns:
+        print("Dados insuficientes ou colunas inválidas para gerar o Scatter Plot.")
+        return
+
+    fig, ax = plt.subplots(figsize=tamanho_figura, dpi=polegadas)
+    
+    # Grelha de fundo subtil
+    ax.set_axisbelow(True)
+    ax.grid(True, linestyle='--', alpha=0.4, color='#BDBDBD')
+
+    # Scatter plot principal
+    sns.scatterplot(
+        data=df,
+        x=coluna_x,
+        y=coluna_y,
+        color=cor_tema,
+        alpha=0.6,
+        s=50,
+        ax=ax,
+        edgecolor='w',
+        linewidth=0.5
+    )
+
+    # Formatação dinâmica dos eixos para milhares, se aplicável
+    ax.xaxis.set_major_formatter(ticker.StrMethodFormatter('{x:,.0f}'))
+    ax.yaxis.set_major_formatter(ticker.StrMethodFormatter('{x:,.0f}'))
+
+    # Limpeza e formatação dos rótulos
+    nome_x = coluna_x.replace('_', ' ').title()
+    nome_y = coluna_y.replace('_', ' ').title()
+    
+    titulo_real = titulo if titulo else f"Correlação: {nome_x} vs {nome_y}"
+    
+    ax.set_title(titulo_real, fontsize=14, fontweight='bold', pad=15, color='#2b2d42')
+    ax.set_xlabel(nome_x, fontsize=11, fontweight='bold', color='#4A4E69')
+    ax.set_ylabel(nome_y, fontsize=11, fontweight='bold', color='#4A4E69')
+
+    sns.despine(top=True, right=True)
     plt.tight_layout()
     plt.show()
