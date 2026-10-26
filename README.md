@@ -28,7 +28,7 @@ Link do banco de dados: <https://www.kaggle.com/datasets/arashnic/fitbit>
 - [x] Criação do módulo `data_loader` para automação de leitura e varredura de arquivos.
 - [x] Inventário, amostragem e seleção de tabelas analíticas (`dailyActivity`, `sleepDay`, `hourlySteps`, `weightLogInfo`).
 - [x] Ingestão e concatenação de dados brutos (Pipeline da Camada Bronze concluída).
-- [ ] Limpeza, tratamento de tipos de dados (datas) e deduplicação (Notebook 02).
+- [x] Limpeza, tratamento de tipos de dados (datas) e deduplicação (Notebook 02
 - [ ] Carga no Banco de Dados e Exploração via SQL.
 - [ ] Desenvolvimento de Dashboards/Visualizações.
 
