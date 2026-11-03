@@ -237,7 +237,7 @@ GROUP BY
 ORDER BY perfil_de_peso;
 
 /* ==============================================================================
-RESUMO EXECUTIVO DO SCRIPT 01 (INSIGHTS DE NEGÓCIO):
+RESUMO: SCRIPT 01 (INSIGHTS DE NEGÓCIO):
 
 1. ALTA FIDELIDADE DIURNA E CONSISTÊNCIA: 
 A amostra de 34 utilizadores apresenta um engajamento excecional para as atividades 
@@ -256,6 +256,7 @@ o que indica um possível desconforto físico em dormir com o relógio no pulso.
 A funcionalidade de peso tem uma taxa de rejeição massiva: quase 65% da base (22 utilizadores) 
 nunca regista o peso. Dos poucos que utilizam, a esmagadora maioria sofre com o registo manual 
 na app (is_manual_report = TRUE). A fricção de digitar os dados afasta o utilizador.
+
 -> Oportunidade Bellabeat: Promover ecossistemas automatizados (como balanças conectadas) 
 ou reposicionar o marketing exclusivamente nas métricas automáticas, que têm 97% de adesão.
 ============================================================================== */

@@ -174,7 +174,7 @@ GROUP BY day_of_week
 ORDER BY media_passos DESC;
 
 /* ==============================================================================
-RESUMO EXECUTIVO DO SCRIPT 02 (PERFIL DE ATIVIDADE E MOVIMENTO):
+RESUMO: SCRIPT 02 (PERFIL DE ATIVIDADE E MOVIMENTO):
 
 1. O PARADOXO DO MOVIMENTO (VOLUME VS. INTENSIDADE):
 A base de clientes apresenta um bom volume de passos (50% dá mais de 7.500 passos/dia), 
@@ -197,6 +197,7 @@ Os picos de atividade ocorrem na Tarde (média de 484 passos/hora), especificame
 às 12h-14h (almoço) e 17h-19h (fim do expediente). As manhãs (antes das 8h) têm baixa 
 atividade, contrariando o mito do "treino matinal". Os dias com maior sedentarismo 
 e menor volume de passos são o Domingo e a Sexta-feira.
+
 -> Insight Bellabeat: As notificações push do telemóvel para encorajar o movimento 
 devem ser enviadas perto da hora de almoço ou ao fim do dia. Ao Domingo, as 
 notificações de treino devem ser substituídas por lembretes de descanso e meditação.
