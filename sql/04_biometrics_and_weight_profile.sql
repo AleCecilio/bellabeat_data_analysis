@@ -6,6 +6,10 @@
 -- ==============================================================================
 -- Como estão fisicamente os usuários que regitram seus pesos?
 -- ==============================================================================
+SELECT
+    COUNT(DISTINCT(user_id)) AS total_utilizadores
+FROM weight_log;
+
 
 SELECT
     ROUND(AVG(weight_kg),2) AS media_peso_kg,
@@ -60,7 +64,7 @@ classificacao AS (
 )
 SELECT
     perfil_de_intensidade,
-    COUNT(user_id) AS total_utilizadores,
+    COUNT(DISTINCT(user_id)) AS total_utilizadores,
     ROUND(AVG(peso_medio), 2) AS media_peso_kg,
     ROUND(AVG(imc_medio), 2) AS media_bmi
 FROM classificacao

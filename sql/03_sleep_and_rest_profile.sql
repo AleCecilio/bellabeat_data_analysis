@@ -32,7 +32,7 @@ SELECT
             THEN '2. SONO IDEAL'
         ELSE '3. SONO ACIMA DO NORMAL'
     END AS perfil_de_sono,
-    COUNT(user_id) AS total_de_usuarios,
+    COUNT(DISTINCT(user_id)) AS total_de_usuarios,
     ROUND(
         (
             COUNT(user_id) /
