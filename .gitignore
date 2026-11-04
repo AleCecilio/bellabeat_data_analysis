@@ -9,3 +9,6 @@ data/raw/
 
 # Prodegendo dados sensiveis do Banco de Dados
 .env
+
+# dashbord
+dashbord/
