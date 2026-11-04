@@ -62,6 +62,13 @@ A decisão baseia-se nos seguintes *insights* extraídos da base de dados:
 * **O Paradoxo do Movimento (Design para a Mulher Trabalhadora):** Os dados mostram que 47% das utilizadoras se enquadram num "Perfil Rotineiro". Atingem um alto volume de passos diários através da movimentação orgânica em horários comerciais (deslocamentos e horário de almoço), e não em ginásios. Como o Leaf se assemelha a uma peça de joalharia, ele resolve a dor de usar um acessório desportivo que não combina com o ambiente corporativo ou eventos sociais.
 * **Rejeição ao *Input* Manual (A Lição da Tabela de Peso):** A análise de biometria revelou uma rejeição massiva à inserção manual de dados (quase 65% nunca regista o peso). Embora a baixa amostragem desta métrica limite a análise estatística, ela gera uma forte conclusão de UX (*User Experience*): a recolha de dados tem de ser invisível e automática. Esta descoberta reforça a premissa de que o *hardware* da Bellabeat (como o Leaf) deve fazer o trabalho pesado de forma passiva, mitigando o abandono de funcionalidades por parte do utilizador.
 
+## Recomendações de Medidas Futuras
+
+Embora o foco primário de marketing seja o hardware (Leaf), a análise levantou oportunidades claras para a evolução a longo prazo do ecossistema Bellabeat:
+
+* **Otimização de Notificações na App:** Implementar alertas de encorajamento ao movimento baseados nos picos horários reais das utilizadoras (especificamente entre as 12h-14h e 17h-19h). Adicionalmente, tendo em vista as dificuldades de sono registadas, a App pode enviar notificações suaves no período noturno sugerindo a redução de estímulos (como evitar telas) e rituais de relaxamento.
+* **Criação de uma Balança Inteligente (Automação):** Visto que o público-alvo revelou ser composto maioritariamente por pessoas com sobrepeso com foco em saúde (e não atletas de alta performance), o acompanhamento do peso é crucial. No entanto, o registo manual gera abandono. O desenvolvimento de uma balança conectada e automática preencheria uma lacuna essencial no portfólio da marca, garantindo fidelização e precisão nos dados biométricos sem exigir esforço extra da utilizadora.
+
 ## Status Atual do Projeto
 
 **Fase Atual:** Preparação e Limpeza de Dados (Camada Silver).
