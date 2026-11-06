@@ -8,6 +8,11 @@
 -- ==============================================================================
 
 SELECT 
+    'Base Total (Dimensão)' AS tabela, 
+    COUNT(DISTINCT user_id) AS total_utilizadores 
+FROM dim_users
+UNION ALL
+SELECT 
     'Atividade Diária' AS tabela, 
     COUNT(DISTINCT user_id) AS total_utilizadores 
 FROM daily_activity
@@ -66,10 +71,12 @@ FROM weight_log;
 
 WITH uso_por_utilizador AS (
     SELECT 
-        user_id,
-        COUNT(activity_date) AS dias_de_uso
-    FROM daily_activity
-    GROUP BY user_id
+        u.user_id,
+        COUNT(a.activity_date) AS dias_de_uso
+    FROM dim_users u
+    LEFT JOIN daily_activity a 
+        ON u.user_id = a.user_id
+    GROUP BY u.user_id
 )
 SELECT 
     CASE 
@@ -79,7 +86,7 @@ SELECT
     END AS categoria_de_uso,
     COUNT(user_id) AS total_utilizadores,
     ROUND(
-        (COUNT(user_id) / (SELECT COUNT(DISTINCT user_id) FROM daily_activity)
+        (COUNT(user_id) / (SELECT COUNT(DISTINCT user_id) FROM dim_users)
     ) * 100, 2) AS percentual_da_base
 FROM uso_por_utilizador
 GROUP BY
@@ -121,35 +128,43 @@ ORDER BY media_horas_uso_diario DESC;
 
 WITH media_por_utilizador AS (
     SELECT 
-        user_id,
+        u.user_id,
         AVG(
             (
-                very_active_minutes + 
-                fairly_active_minutes + 
-                lightly_active_minutes + 
-                sedentary_minutes
+                a.very_active_minutes + 
+                a.fairly_active_minutes + 
+                a.lightly_active_minutes + 
+                a.sedentary_minutes
             ) / 60
         ) AS media_horas_uso_diario
-    FROM daily_activity
-    GROUP BY user_id
+    FROM dim_users u
+    LEFT JOIN daily_activity a 
+        ON u.user_id = a.user_id
+    GROUP BY u.user_id
 )
 SELECT 
     CASE
-        WHEN ROUND(media_horas_uso_diario, 1) >= 23.5 THEN '1. Uso Contínuo (~24h)'
-        WHEN ROUND(media_horas_uso_diario, 1) >= 16 THEN '2. Uso Diário Alto (16h - 23h)'
-        WHEN ROUND(media_horas_uso_diario, 1) >= 8 THEN '3. Uso Parcial / Diurno (8h - 15h)'
+        WHEN ROUND(media_horas_uso_diario, 1) >= 23.5 
+            THEN '1. Uso Contínuo (~24h)'
+        WHEN ROUND(media_horas_uso_diario, 1) >= 16 
+            THEN '2. Uso Diário Alto (16h - 23h)'
+        WHEN ROUND(media_horas_uso_diario, 1) >= 8 
+            THEN '3. Uso Parcial / Diurno (8h - 15h)'
         ELSE '4. Uso Pontual / Apenas Sono ou Treino (< 8h)'
     END AS categoria_de_uso,
     COUNT(user_id) AS total_utilizadores,
     ROUND((
-        COUNT(user_id) / (SELECT COUNT(DISTINCT user_id) FROM daily_activity)
+        COUNT(user_id) / (SELECT COUNT(DISTINCT user_id) FROM dim_users)
     ) * 100, 2) AS percentual_da_base
 FROM media_por_utilizador
 GROUP BY 
     CASE
-        WHEN ROUND(media_horas_uso_diario, 1) >= 23.5 THEN '1. Uso Contínuo (~24h)'
-        WHEN ROUND(media_horas_uso_diario, 1) >= 16 THEN '2. Uso Diário Alto (16h - 23h)'
-        WHEN ROUND(media_horas_uso_diario, 1) >= 8 THEN '3. Uso Parcial / Diurno (8h - 15h)'
+        WHEN ROUND(media_horas_uso_diario, 1) >= 23.5 
+            THEN '1. Uso Contínuo (~24h)'
+        WHEN ROUND(media_horas_uso_diario, 1) >= 16 
+            THEN '2. Uso Diário Alto (16h - 23h)'
+        WHEN ROUND(media_horas_uso_diario, 1) >= 8 
+            THEN '3. Uso Parcial / Diurno (8h - 15h)'
         ELSE '4. Uso Pontual / Apenas Sono ou Treino (< 8h)'
     END
 ORDER BY categoria_de_uso;
@@ -160,19 +175,23 @@ ORDER BY categoria_de_uso;
 -- ==============================================================================
 WITH registros_diarios AS (
     SELECT
-        day_of_week,
-        COUNT(user_id) AS total_registros,
-        ROUND(AVG(total_steps), 0) AS media_de_passos,
-        ROUND(AVG(total_distance), 2) AS distancia_media 
-    FROM daily_activity
-    GROUP BY day_of_week
+        c.day_name AS day_of_week,
+        COUNT(a.user_id) AS total_registros,
+        ROUND(AVG(a.total_steps), 0) AS media_de_passos,
+        ROUND(AVG(a.total_distance), 2) AS distancia_media 
+    FROM daily_activity a
+    JOIN dim_calendar c 
+        ON a.activity_date = c.date
+    GROUP BY c.day_name
 )
 SELECT 
     day_of_week,
     total_registros,
     media_de_passos,
     distancia_media,
-    ROUND((total_registros / SUM(total_registros) OVER ()) * 100, 2) AS percentual_da_base
+    ROUND((
+        total_registros / SUM(total_registros) OVER ()
+    ) * 100, 2) AS percentual_da_base
 FROM registros_diarios
 ORDER BY total_registros DESC;
 
@@ -183,26 +202,34 @@ WITH consistencia_sono AS (
     SELECT 
         d.user_id,
         COUNT(s.sleep_date) AS dias_dormidos
-    FROM (SELECT DISTINCT user_id FROM daily_activity) d
+    FROM dim_users d
     LEFT JOIN sleep_day s 
         ON d.user_id = s.user_id
     GROUP BY d.user_id
 )
 SELECT 
     CASE 
-        WHEN dias_dormidos >= 21 THEN '1. Dorme sempre com o aparelho (21 a 31 dias)'
-        WHEN dias_dormidos BETWEEN 11 AND 20 THEN '2. Uso moderado no sono (11 a 20 dias)'
-        WHEN dias_dormidos BETWEEN 1 AND 10 THEN '3. Raramente dorme com o aparelho (1 a 10 dias)'
+        WHEN dias_dormidos >= 21 
+            THEN '1. Dorme sempre com o aparelho (21 a 31 dias)'
+        WHEN dias_dormidos BETWEEN 11 AND 20 
+            THEN '2. Uso moderado no sono (11 a 20 dias)'
+        WHEN dias_dormidos BETWEEN 1 AND 10 
+            THEN '3. Raramente dorme com o aparelho (1 a 10 dias)'
         ELSE '4. Nunca regista o sono (0 dias)'
     END AS perfil_de_sono,
     COUNT(user_id) AS total_utilizadores,
-    ROUND((COUNT(user_id) / (SELECT COUNT(DISTINCT user_id) FROM daily_activity)) * 100, 2) AS percentual_da_base_total
+    ROUND((
+        COUNT(user_id) / (SELECT COUNT(DISTINCT user_id) FROM dim_users
+    )) * 100, 2) AS percentual_da_base_total
 FROM consistencia_sono
 GROUP BY 
     CASE 
-        WHEN dias_dormidos >= 21 THEN '1. Dorme sempre com o aparelho (21 a 31 dias)'
-        WHEN dias_dormidos BETWEEN 11 AND 20 THEN '2. Uso moderado no sono (11 a 20 dias)'
-        WHEN dias_dormidos BETWEEN 1 AND 10 THEN '3. Raramente dorme com o aparelho (1 a 10 dias)'
+        WHEN dias_dormidos >= 21 
+            THEN '1. Dorme sempre com o aparelho (21 a 31 dias)'
+        WHEN dias_dormidos BETWEEN 11 AND 20 
+            THEN '2. Uso moderado no sono (11 a 20 dias)'
+        WHEN dias_dormidos BETWEEN 1 AND 10 
+            THEN '3. Raramente dorme com o aparelho (1 a 10 dias)'
         ELSE '4. Nunca regista o sono (0 dias)'
     END
 ORDER BY perfil_de_sono;
@@ -213,25 +240,31 @@ ORDER BY perfil_de_sono;
 WITH consistencia_peso AS (
     SELECT 
         d.user_id,
-        COUNT(w.log_id) AS dias_peso_registrado -- Pode usar LogId ou weight_date
-    FROM (SELECT DISTINCT user_id FROM daily_activity) d
+        COUNT(w.log_id) AS dias_peso_registrado 
+    FROM dim_users d
     LEFT JOIN weight_log w 
         ON d.user_id = w.user_id
     GROUP BY d.user_id
 )
 SELECT 
     CASE 
-        WHEN dias_peso_registrado >= 15 THEN '1. Regista frequentemente (15+ dias)'
-        WHEN dias_peso_registrado BETWEEN 1 AND 14 THEN '2. Regista esporadicamente (1 a 14 dias)'
+        WHEN dias_peso_registrado >= 15 
+            THEN '1. Regista frequentemente (15+ dias)'
+        WHEN dias_peso_registrado BETWEEN 1 AND 14
+            THEN '2. Regista esporadicamente (1 a 14 dias)'
         ELSE '3. Nunca regista o peso (0 dias)'
     END AS perfil_de_peso,
     COUNT(user_id) AS total_utilizadores,
-    ROUND((COUNT(user_id) / (SELECT COUNT(DISTINCT user_id) FROM daily_activity)) * 100, 2) AS percentual_da_base_total
+    ROUND((
+        COUNT(user_id) / (SELECT COUNT(DISTINCT user_id) FROM dim_users
+    )) * 100, 2) AS percentual_da_base_total
 FROM consistencia_peso
 GROUP BY 
     CASE 
-        WHEN dias_peso_registrado >= 15 THEN '1. Regista frequentemente (15+ dias)'
-        WHEN dias_peso_registrado BETWEEN 1 AND 14 THEN '2. Regista esporadicamente (1 a 14 dias)'
+        WHEN dias_peso_registrado >= 15 
+            THEN '1. Regista frequentemente (15+ dias)'
+        WHEN dias_peso_registrado BETWEEN 1 AND 14 
+            THEN '2. Regista esporadicamente (1 a 14 dias)'
         ELSE '3. Nunca regista o peso (0 dias)'
     END
 ORDER BY perfil_de_peso;

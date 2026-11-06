@@ -24,18 +24,20 @@ FROM daily_activity;
 -- ==============================================================================
 WITH usuario_por_tempo_atividade AS (
     SELECT 
-        user_id,
-        SUM(very_active_minutes) AS min_totais_muito_ativo,
-        SUM(fairly_active_minutes) AS min_totais_moderadamente_ativo,
-        SUM(lightly_active_minutes) AS min_totais_levemente_ativo,
-        SUM(sedentary_minutes) AS min_totais_sedentario,
+        u.user_id,
+        SUM(a.very_active_minutes) AS min_totais_muito_ativo,
+        SUM(a.fairly_active_minutes) AS min_totais_moderadamente_ativo,
+        SUM(a.lightly_active_minutes) AS min_totais_levemente_ativo,
+        SUM(a.sedentary_minutes) AS min_totais_sedentario,
         SUM(
-            very_active_minutes + 
-            fairly_active_minutes + 
-            lightly_active_minutes
+            a.very_active_minutes + 
+            a.fairly_active_minutes + 
+            a.lightly_active_minutes
         ) AS tempo_total_ativo
-    FROM daily_activity
-    GROUP BY user_id
+    FROM dim_users u
+    LEFT JOIN daily_activity a 
+        ON u.user_id = a.user_id
+    GROUP BY u.user_id
 )
 SELECT 
     CASE
@@ -51,7 +53,7 @@ SELECT
     ROUND(
         (
             COUNT(user_id) / 
-            (SELECT COUNT(DISTINCT user_id) FROM daily_activity)
+            (SELECT COUNT(DISTINCT user_id) FROM dim_users)
         ) * 100, 2
     ) AS percentual_da_base
 FROM usuario_por_tempo_atividade
@@ -74,15 +76,17 @@ ORDER BY perfil_de_intensidade;
 
 WITH media_passos_usuario AS (
     SELECT 
-        user_id,
-        AVG(total_steps) AS media_diaria_passos
-    FROM daily_activity
-    GROUP BY user_id
+        u.user_id,
+        AVG(a.total_steps) AS media_diaria_passos
+    FROM dim_users u
+    LEFT JOIN daily_activity a 
+        ON u.user_id = a.user_id
+    GROUP BY u.user_id
 )
 SELECT 
     CASE
         WHEN media_diaria_passos >= 10000 
-            THEN '1. Muito Ativo (10k+ passos)'   
+            THEN '1. Muito Ativo (10k+ passos)'    
         WHEN media_diaria_passos >= 7500 
             THEN '2. Moderado (7.5k - 9.9k passos)'  
         WHEN media_diaria_passos >= 5000 
@@ -93,7 +97,7 @@ SELECT
     ROUND(
         (
             COUNT(user_id) / 
-            (SELECT COUNT(DISTINCT user_id) FROM daily_activity)
+            (SELECT COUNT(DISTINCT user_id) FROM dim_users)
         ) * 100, 2
     ) AS percentual_da_base
 FROM media_passos_usuario
@@ -163,14 +167,16 @@ ORDER BY tipo_de_dia_fisico;
 -- Exitem dias onde os usuario andam menos e têm mais atividades sedentarias?
 -- ==============================================================================
 SELECT 
-    day_of_week,
-    ROUND(AVG(very_active_minutes), 2) AS media_min_muito_ativos,
-    ROUND(AVG(fairly_active_minutes), 2) AS media_min_moderadamente_ativos,
-    ROUND(AVG(lightly_active_minutes), 2) AS media_min_levemente_ativos,
-    ROUND(AVG(sedentary_minutes), 2) AS media_min_sedentarios,
-    ROUND(AVG(total_steps), 2) AS media_passos
-FROM daily_activity
-GROUP BY day_of_week
+    c.day_name AS day_of_week,
+    ROUND(AVG(a.very_active_minutes), 2) AS media_min_muito_ativos,
+    ROUND(AVG(a.fairly_active_minutes), 2) AS media_min_moderadamente_ativos,
+    ROUND(AVG(a.lightly_active_minutes), 2) AS media_min_levemente_ativos,
+    ROUND(AVG(a.sedentary_minutes), 2) AS media_min_sedentarios,
+    ROUND(AVG(a.total_steps), 2) AS media_passos
+FROM daily_activity a
+JOIN dim_calendar c 
+    ON a.activity_date = c.full_date
+GROUP BY c.day_name
 ORDER BY media_passos DESC;
 
 /* ==============================================================================

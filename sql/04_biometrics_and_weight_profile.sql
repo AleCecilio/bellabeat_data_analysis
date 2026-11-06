@@ -7,8 +7,10 @@
 -- Como estão fisicamente os usuários que regitram seus pesos?
 -- ==============================================================================
 SELECT
-    COUNT(DISTINCT(user_id)) AS total_utilizadores
-FROM weight_log;
+    COUNT(DISTINCT(u.user_id)) AS total_utilizadores
+FROM dim_users u
+INNER JOIN weight_log w 
+    ON u.user_id = w.user_id;
 
 
 SELECT
@@ -23,26 +25,30 @@ FROM weight_log;
 
 WITH atividade_por_usuario AS (
     SELECT
-        user_id,
-        SUM(very_active_minutes) AS min_totais_muito_ativo,
-        SUM(fairly_active_minutes) AS min_totais_moderadamente_ativo,
-        SUM(lightly_active_minutes) AS min_totais_levemente_ativo,
-        SUM(sedentary_minutes) AS min_totais_sedentario,
+        u.user_id,
+        SUM(a.very_active_minutes) AS min_totais_muito_ativo,
+        SUM(a.fairly_active_minutes) AS min_totais_moderadamente_ativo,
+        SUM(a.lightly_active_minutes) AS min_totais_levemente_ativo,
+        SUM(a.sedentary_minutes) AS min_totais_sedentario,
         SUM(
-            very_active_minutes +
-            fairly_active_minutes +
-            lightly_active_minutes
+            a.very_active_minutes +
+            a.fairly_active_minutes +
+            a.lightly_active_minutes
         ) AS tempo_total_ativo
-    FROM daily_activity 
-    GROUP BY user_id
+    FROM dim_users u
+    INNER JOIN daily_activity a 
+        ON u.user_id = a.user_id 
+    GROUP BY u.user_id
 ),
 peso_por_usuario AS (
     SELECT
-        user_id,
-        AVG(weight_kg) AS peso_medio,
-        AVG(bmi) AS imc_medio
-    FROM weight_log
-    GROUP BY user_id
+        u.user_id,
+        AVG(w.weight_kg) AS peso_medio,
+        AVG(w.bmi) AS imc_medio
+    FROM dim_users u
+    INNER JOIN weight_log w 
+        ON u.user_id = w.user_id
+    GROUP BY u.user_id
 ),
 classificacao AS (
     SELECT

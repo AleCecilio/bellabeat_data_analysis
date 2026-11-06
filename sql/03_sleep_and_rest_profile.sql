@@ -19,10 +19,12 @@ FROM sleep_day;
 -- ==============================================================================
 WITH media_de_sono AS (
     SELECT
-        user_id,
-        ROUND(AVG(total_minutes_asleep) / 60, 2) AS tempo_medio_sono
-    FROM sleep_day
-    GROUP BY user_id
+        u.user_id,
+        ROUND(AVG(s.total_minutes_asleep) / 60, 2) AS tempo_medio_sono
+    FROM dim_users u
+    LEFT JOIN sleep_day s 
+        ON u.user_id = s.user_id
+    GROUP BY u.user_id
 )
 SELECT
     CASE
@@ -32,11 +34,11 @@ SELECT
             THEN '2. SONO IDEAL'
         ELSE '3. SONO ACIMA DO NORMAL'
     END AS perfil_de_sono,
-    COUNT(DISTINCT(user_id)) AS total_de_usuarios,
+    COUNT(user_id) AS total_de_usuarios,
     ROUND(
         (
             COUNT(user_id) /
-            (SELECT COUNT(DISTINCT user_id) FROM sleep_day) 
+            (SELECT COUNT(DISTINCT user_id) FROM dim_users) 
         )* 100, 2
     ) AS percentual_por_categoria
 FROM media_de_sono
@@ -57,14 +59,16 @@ ORDER BY perfil_de_sono;
 
 
 SELECT 
-    TO_CHAR(sleep_date, 'DAY') AS dia_semana,
-    ROUND(AVG(total_minutes_asleep) / 60,2) AS tempo_medio_sono,
+    c.day_name AS dia_semana,
+    ROUND(AVG(s.total_minutes_asleep) / 60,2) AS tempo_medio_sono,
     ROUND((
-        (AVG(total_minutes_asleep)) / 
-        SUM(AVG(total_minutes_asleep)) OVER()
+        (AVG(s.total_minutes_asleep)) / 
+        SUM(AVG(s.total_minutes_asleep)) OVER()
     ) * 100, 2) AS percentual_sono_dia
-FROM sleep_day
-GROUP BY TO_CHAR(sleep_date, 'DAY')
+FROM sleep_day s
+JOIN dim_calendar c 
+    ON s.sleep_date = c.full_date
+GROUP BY c.day_name
 ORDER BY tempo_medio_sono;
 
 /* ==============================================================================
