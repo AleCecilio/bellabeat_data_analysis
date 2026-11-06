@@ -1,4 +1,4 @@
-date,year,month,month_name,day,day_of_week,day_name,is_weekend
+full_date,year,month,month_name,day,day_of_week,day_name,is_weekend
 2016-03-12,2016,3,March,12,5,Saturday,True
 2016-03-13,2016,3,March,13,6,Sunday,True
 2016-03-14,2016,3,March,14,0,Monday,False
