@@ -23,7 +23,7 @@ A análise parte de dados de dispositivos vestíveis de 35 usuários ao longo de
 
 <p align="center">
   <a href="https://app.powerbi.com/view?r=eyJrIjoiMGQ0YWU4MWMtYmQyMi00MzNlLTg2YzYtZTVlYmYxOTYwMzJlIiwidCI6IjU1ZWRkMDA3LTY2ZTItNDllOS1iZWM3LWU1YWIxYzFiYWMyNiJ9">
-    <img src="dashbord/Gifs/Adobe_Express_-_Gravando_2026-11-16_101834.gif" alt="Capa do dashboard Bellabeat com menu de páginas analíticas" width="85%">
+    <img src="dashbord/Gifs/Adobe Express - Gravando 2026-11-16 101834.gif" alt="Capa do dashboard Bellabeat com menu de páginas analíticas" width="85%">
   </a>
 </p>
 <p align="center"><sub>Capa do dashboard e menu de navegação entre as páginas analíticas. Clique para abrir a versão interativa.</sub></p>
@@ -205,8 +205,8 @@ O trabalho seguiu as etapas do framework do curso.
 ### Uso e retenção
 
 <p align="center">
-  <a href="dashbord/Dashboard%20Esqueleto/Imagens/Captura_de_tela_2026-11-16_095836.png">
-    <img src="dashbord/Dashboard%20Esqueleto/Imagens/Captura_de_tela_2026-11-16_095836.png" alt="Dashboard Bellabeat, página Perfil de Uso: funil de adesão, horas com o aparelho no corpo e consistência de sono e peso" width="100%">
+  <a href="dashbord/Dashboard Esqueleto/Imagens/Captura de tela 2026-11-16 095836.png">
+    <img src="dashbord/Dashboard Esqueleto/Imagens/Captura de tela 2026-11-16 095836.png" alt="Dashboard Bellabeat, página Perfil de Uso: funil de adesão, horas com o aparelho no corpo e consistência de sono e peso" width="100%">
   </a>
 </p>
 <p align="center"><sub>Página Perfil de Uso: funil de adesão, horas com o aparelho no corpo e consistência de sono e de peso.</sub></p>
@@ -243,8 +243,8 @@ O trabalho seguiu as etapas do framework do curso.
 ### Perfil físico
 
 <p align="center">
-  <a href="dashbord/Dashboard%20Esqueleto/Imagens/Captura_de_tela_2026-11-16_095903.png">
-    <img src="dashbord/Dashboard%20Esqueleto/Imagens/Captura_de_tela_2026-11-16_095903.png" alt="Dashboard Bellabeat, página Perfil Físico: médias de atividade, picos de movimento por hora, perfis e IMC" width="100%">
+  <a href="dashbord/Dashboard Esqueleto/Imagens/Captura de tela 2026-11-16 095903.png">
+    <img src="dashbord/Dashboard Esqueleto/Imagens/Captura de tela 2026-11-16 095903.png" alt="Dashboard Bellabeat, página Perfil Físico: médias de atividade, picos de movimento por hora, perfis e IMC" width="100%">
   </a>
 </p>
 <p align="center"><sub>Página Perfil Físico: médias de atividade, picos de movimento por hora, distribuição de perfis e relação entre passos e IMC.</sub></p>
@@ -264,8 +264,8 @@ O trabalho seguiu as etapas do framework do curso.
 ### Sono
 
 <p align="center">
-  <a href="dashbord/Dashboard%20Esqueleto/Imagens/Captura_de_tela_2026-11-16_095918.png">
-    <img src="dashbord/Dashboard%20Esqueleto/Imagens/Captura_de_tela_2026-11-16_095918.png" alt="Dashboard Bellabeat, página Perfil de Sono: sono médio, tempo em vigília, qualidade, eficiência e ciclo semanal" width="100%">
+  <a href="dashbord/Dashboard Esqueleto/Imagens/Captura de tela 2026-11-16 095918.png">
+    <img src="dashbord/Dashboard Esqueleto/Imagens/Captura de tela 2026-11-16 095918.png" alt="Dashboard Bellabeat, página Perfil de Sono: sono médio, tempo em vigília, qualidade, eficiência e ciclo semanal" width="100%">
   </a>
 </p>
 <p align="center"><sub>Página Perfil de Sono: sono médio, tempo em vigília, distribuição da qualidade, eficiência e ciclo semanal.</sub></p>
@@ -303,8 +303,8 @@ O dashboard está publicado no [Power BI Web](https://app.powerbi.com/view?r=eyJ
 ### Navegação
 
 <p align="center">
-  <a href="dashbord/Gifs/Gravando_2026-11-16_101030.gif">
-    <img src="dashbord/Gifs/Gravando_2026-11-16_101030.gif" alt="Navegação entre as páginas do dashboard Bellabeat" width="85%">
+  <a href="dashbord/Gifs/Gravando 2026-11-16 101030.gif">
+    <img src="dashbord/Gifs/Gravando 2026-11-16 101030.gif" alt="Navegação entre as páginas do dashboard Bellabeat" width="85%">
   </a>
 </p>
 <p align="center"><sub>Navegação entre as páginas analíticas pelo menu lateral.</sub></p>
@@ -314,8 +314,8 @@ O dashboard está publicado no [Power BI Web](https://app.powerbi.com/view?r=eyJ
 O painel de filtros permite recortar a análise por usuário, por intervalo de datas e por padrão de uso diário. Todos os visuais são recalculados conforme a seleção, e um botão limpa todas as segmentações.
 
 <p align="center">
-  <a href="dashbord/Gifs/Gravando_2026-11-16_101711.gif">
-    <img src="dashbord/Gifs/Gravando_2026-11-16_101711.gif" alt="Painel de filtros do dashboard Bellabeat com seleção por usuário, data e padrão de uso" width="85%">
+  <a href="dashbord/Gifs/Gravando 2026-11-16 101711.gif">
+    <img src="dashbord/Gifs/Gravando 2026-11-16 101711.gif" alt="Painel de filtros do dashboard Bellabeat com seleção por usuário, data e padrão de uso" width="85%">
   </a>
 </p>
 <p align="center"><sub>Painel de filtros por usuário, data e padrão de uso diário.</sub></p>
