@@ -173,8 +173,7 @@ bellabeat_data_analysis/
 ```
 
 **Observações:**
-- `dashbord/Gifs/` guarda as demonstrações de interação usadas neste README.
-- `dashbord/Dashboard Esqueleto/Imagens/` reúne o material gráfico do dashboard: as telas por estado (padrão, navegação e filtros), a capa, os logotipos e os prints das três páginas.
+- `dashbord/` e `data/raw` pastas foram ignoradas para economizar espaço de versionamento, tanto o dashboard quanto os dados podem ser encontados em links neste documento.
 
 ---
 
